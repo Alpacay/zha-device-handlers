@@ -97,6 +97,7 @@ class RepenicTimeCluster(CustomCluster, Time):
         )
         return result
 
+
 class PressType(t.enum8):
     """Press type enum."""
 
@@ -345,7 +346,9 @@ class RepenicSceneModeCluster(CustomCluster):
                             sleep_on_off = sleep_data[0] if len(sleep_data) > 0 else 0
                             sleep_hour = sleep_data[1] if len(sleep_data) > 1 else 10
                             sleep_minute = sleep_data[2] if len(sleep_data) > 2 else 0
-                            sleep_countdown = sleep_data[4] if len(sleep_data) > 4 else 30
+                            sleep_countdown = (
+                                sleep_data[4] if len(sleep_data) > 4 else 30
+                            )
 
                             self._attr_cache["sleep_on_off"] = OnOffState(sleep_on_off)
                             self._attr_cache["sleep_hour"] = Hour(sleep_hour)
@@ -368,16 +371,28 @@ class RepenicSceneModeCluster(CustomCluster):
                         if data_type == 0x42:  # CharacterString type
                             # wake_up_pattern format: [wakeup_on_off, wakeup_hour, wakeup_minute, wakeup_brightness, wakeup_countdown, 0]
                             wakeup_data = data[8:14]  # length fixed to 6
-                            wakeup_on_off = wakeup_data[0] if len(wakeup_data) > 0 else 0
+                            wakeup_on_off = (
+                                wakeup_data[0] if len(wakeup_data) > 0 else 0
+                            )
                             wakeup_hour = wakeup_data[1] if len(wakeup_data) > 1 else 10
-                            wakeup_minute = wakeup_data[2] if len(wakeup_data) > 2 else 0
-                            wakeup_brightness = wakeup_data[3] if len(wakeup_data) > 3 else 100
-                            wakeup_countdown = wakeup_data[4] if len(wakeup_data) > 4 else 30
+                            wakeup_minute = (
+                                wakeup_data[2] if len(wakeup_data) > 2 else 0
+                            )
+                            wakeup_brightness = (
+                                wakeup_data[3] if len(wakeup_data) > 3 else 100
+                            )
+                            wakeup_countdown = (
+                                wakeup_data[4] if len(wakeup_data) > 4 else 30
+                            )
 
-                            self._attr_cache["wakeup_on_off"] = OnOffState(wakeup_on_off)
+                            self._attr_cache["wakeup_on_off"] = OnOffState(
+                                wakeup_on_off
+                            )
                             self._attr_cache["wakeup_hour"] = Hour(wakeup_hour)
                             self._attr_cache["wakeup_minute"] = Minute(wakeup_minute)
-                            self._attr_cache["wakeup_brightness"] = int(wakeup_brightness / 2.54)
+                            self._attr_cache["wakeup_brightness"] = int(
+                                wakeup_brightness / 2.54
+                            )
                             self._attr_cache["wakeup_countdown"] = WakeupCountdown(
                                 wakeup_countdown
                             )
@@ -400,16 +415,24 @@ class RepenicSceneModeCluster(CustomCluster):
                             night_on_off = night_data[0] if len(night_data) > 0 else 0
                             night_hour = night_data[1] if len(night_data) > 1 else 0
                             night_minute = night_data[2] if len(night_data) > 2 else 0
-                            night_brightness = night_data[3] if len(night_data) > 3 else 10
+                            night_brightness = (
+                                night_data[3] if len(night_data) > 3 else 10
+                            )
                             night_end_hour = night_data[4] if len(night_data) > 4 else 6
-                            night_end_minute = night_data[5] if len(night_data) > 5 else 0
+                            night_end_minute = (
+                                night_data[5] if len(night_data) > 5 else 0
+                            )
 
                             self._attr_cache["night_on_off"] = OnOffState(night_on_off)
                             self._attr_cache["night_hour"] = Hour(night_hour)
                             self._attr_cache["night_minute"] = Minute(night_minute)
-                            self._attr_cache["night_brightness"] = int(night_brightness / 2.54)
+                            self._attr_cache["night_brightness"] = int(
+                                night_brightness / 2.54
+                            )
                             self._attr_cache["night_end_hour"] = Hour(night_end_hour)
-                            self._attr_cache["night_end_minute"] = Minute(night_end_minute)
+                            self._attr_cache["night_end_minute"] = Minute(
+                                night_end_minute
+                            )
 
                             _LOGGER.warning(
                                 "Parsed night_pattern from raw bytes: on_off=%s, hour=%s, minute=%s, brightness=%s, end_hour=%s, end_minute=%s",
@@ -518,7 +541,14 @@ class RepenicSceneModeCluster(CustomCluster):
             # Send command: [wakeup_on_off, wakeup_hour, wakeup_minute, int(wakeup_brightness * 2.54), wakeup_countdown, 0]
             await self.set_wakeup_pattern(
                 pattern=bytes(
-                    [wakeup_on_off, wakeup_hour, wakeup_minute, int(wakeup_brightness * 2.54), wakeup_countdown, 0]
+                    [
+                        wakeup_on_off,
+                        wakeup_hour,
+                        wakeup_minute,
+                        int(wakeup_brightness * 2.54),
+                        wakeup_countdown,
+                        0,
+                    ]
                 )
             )
             return [[foundation.WriteAttributesStatusRecord(foundation.Status.SUCCESS)]]
@@ -553,7 +583,14 @@ class RepenicSceneModeCluster(CustomCluster):
             # Send command: [night_on_off, night_hour, night_minute, int(night_brightness * 2.54), night_end_hour, night_end_minute]
             await self.set_night_pattern(
                 pattern=bytes(
-                    [night_on_off, night_hour, night_minute, int(night_brightness * 2.54), night_end_hour, night_end_minute]
+                    [
+                        night_on_off,
+                        night_hour,
+                        night_minute,
+                        int(night_brightness * 2.54),
+                        night_end_hour,
+                        night_end_minute,
+                    ]
                 )
             )
             return [[foundation.WriteAttributesStatusRecord(foundation.Status.SUCCESS)]]
@@ -622,6 +659,7 @@ class RepenicOnOff(NoReplyMixin, CustomCluster, OnOff):
             await asyncio.sleep(0.5)
 
         self.read_attributes([0x000])
+
 
 class RepenicLevelControl(NoReplyMixin, CustomCluster, LevelControl):
     """Repenic LevelControl Cluster."""
