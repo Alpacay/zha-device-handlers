@@ -1,0 +1,2 @@
+"""Quirks for Repenic devices."""
+
