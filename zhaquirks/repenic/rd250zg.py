@@ -4,6 +4,7 @@ import asyncio
 from datetime import datetime
 import logging
 import time
+from typing import Any
 
 from zigpy import types as t
 from zigpy.quirks import CustomCluster
@@ -450,7 +451,7 @@ class RepenicSceneModeCluster(CustomCluster):
 
     async def write_attributes(
         self,
-        attributes: dict[str | int | foundation.ZCLAttributeDef, Any],  # noqa: F821
+        attributes: dict[str | int | foundation.ZCLAttributeDef, Any],
         manufacturer: int | UndefinedType | None = UNDEFINED,
         **kwargs,
     ) -> list[list[foundation.WriteAttributesStatusRecord]]:
