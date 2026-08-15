@@ -72,7 +72,6 @@ class HzcDelayCluster(CustomCluster):
         step=1,
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
-        translation_key="auto_off_timer",
         fallback_name="Channel 1 auto off timer",
     )
     .number(
@@ -84,7 +83,6 @@ class HzcDelayCluster(CustomCluster):
         step=1,
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
-        translation_key="auto_on_timer",
         fallback_name="Channel 1 auto on timer",
     )
     .number(
@@ -96,7 +94,6 @@ class HzcDelayCluster(CustomCluster):
         step=1,
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
-        translation_key="off_delay",
         fallback_name="Channel 1 off delay",
     )
     .number(
@@ -108,7 +105,6 @@ class HzcDelayCluster(CustomCluster):
         step=1,
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
-        translation_key="on_delay",
         fallback_name="Channel 1 on delay",
     )
     # Channel 2 (EP2) - power on state uses standard start_up_on_off attribute
@@ -129,7 +125,6 @@ class HzcDelayCluster(CustomCluster):
         step=1,
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
-        translation_key="auto_off_timer",
         fallback_name="Channel 2 auto off timer",
     )
     .number(
@@ -141,7 +136,6 @@ class HzcDelayCluster(CustomCluster):
         step=1,
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
-        translation_key="auto_on_timer",
         fallback_name="Channel 2 auto on timer",
     )
     .number(
@@ -153,7 +147,6 @@ class HzcDelayCluster(CustomCluster):
         step=1,
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
-        translation_key="off_delay",
         fallback_name="Channel 2 off delay",
     )
     .number(
@@ -165,17 +158,24 @@ class HzcDelayCluster(CustomCluster):
         step=1,
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
-        translation_key="on_delay",
         fallback_name="Channel 2 on delay",
     )
-    # Global config: external switch type (writing either EP syncs to both)
+    # External switch type per channel (EP1/EP2: AID 0x0000)
     .enum(
         attribute_name="external_switch_type",
         enum_class=ExternalSwitchType,
         cluster_id=HzcDelayCluster.cluster_id,
         endpoint_id=1,
-        translation_key="external_switch_type",
-        fallback_name="External switch type",
+        translation_key="channel_1_external_switch_type",
+        fallback_name="Channel 1 external switch type",
+    )
+    .enum(
+        attribute_name="external_switch_type",
+        enum_class=ExternalSwitchType,
+        cluster_id=HzcDelayCluster.cluster_id,
+        endpoint_id=2,
+        translation_key="channel_2_external_switch_type",
+        fallback_name="Channel 2 external switch type",
     )
     .add_to_registry()
 )
