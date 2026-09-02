@@ -491,8 +491,10 @@ class RepenicSceneModeCluster(CustomCluster):
         ):
             # Update with new values if provided (support both name and ID)
             for attr_name, attr_id in sleep_attr_map.items():
-                if attr_name in attributes or attr_id in attributes:
+                if attr_name in attributes:
                     self._attr_cache[attr_name] = attributes[attr_name]
+                elif attr_id in attributes:
+                    self._attr_cache[attr_name] = attributes[attr_id]
             # Get current values for all sleep attributes
             sleep_on_off = self._attr_cache.get("sleep_on_off", 0)
             sleep_hour = self._attr_cache.get("sleep_hour", 10)
@@ -522,8 +524,10 @@ class RepenicSceneModeCluster(CustomCluster):
         ):
             # Update with new values if provided (support both name and ID)
             for attr_name, attr_id in wakeup_attr_map.items():
-                if attr_name in attributes or attr_id in attributes:
+                if attr_name in attributes:
                     self._attr_cache[attr_name] = attributes[attr_name]
+                elif attr_id in attributes:
+                    self._attr_cache[attr_name] = attributes[attr_id]
             # Get current values for all wakeup attributes
             wakeup_on_off = self._attr_cache.get("wakeup_on_off", 0)
             wakeup_hour = self._attr_cache.get("wakeup_hour", 10)
@@ -562,8 +566,10 @@ class RepenicSceneModeCluster(CustomCluster):
         ):
             # Update with new values if provided (support both name and ID)
             for attr_name, attr_id in night_attr_map.items():
-                if attr_name in attributes or attr_id in attributes:
+                if attr_name in attributes:
                     self._attr_cache[attr_name] = attributes[attr_name]
+                elif attr_id in attributes:
+                    self._attr_cache[attr_name] = attributes[attr_id]
             # Get current values for all night attributes
             night_on_off = self._attr_cache.get("night_on_off", 0)
             night_hour = self._attr_cache.get("night_hour", 0)
@@ -659,7 +665,7 @@ class RepenicOnOff(NoReplyMixin, CustomCluster, OnOff):
                 pass
             await asyncio.sleep(0.5)
 
-        self.read_attributes([0x000])
+        await self.read_attributes([0x000])
 
 
 class RepenicLevelControl(NoReplyMixin, CustomCluster, LevelControl):
