@@ -77,7 +77,9 @@ class HzcDelayCluster(CustomCluster):
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
         fallback_name="Channel 1 auto off timer",
-        reporting_config=ReportingConfig(min_interval=1, max_interval=300, reportable_change=1),
+        reporting_config=ReportingConfig(
+            min_interval=1, max_interval=300, reportable_change=1
+        ),
     )
     .number(
         attribute_name="auto_on_timer",
@@ -89,7 +91,9 @@ class HzcDelayCluster(CustomCluster):
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
         fallback_name="Channel 1 auto on timer",
-        reporting_config=ReportingConfig(min_interval=1, max_interval=300, reportable_change=1),
+        reporting_config=ReportingConfig(
+            min_interval=1, max_interval=300, reportable_change=1
+        ),
     )
     .number(
         attribute_name="off_delay",
@@ -101,7 +105,9 @@ class HzcDelayCluster(CustomCluster):
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
         fallback_name="Channel 1 off delay",
-        reporting_config=ReportingConfig(min_interval=1, max_interval=300, reportable_change=1),
+        reporting_config=ReportingConfig(
+            min_interval=1, max_interval=300, reportable_change=1
+        ),
     )
     .number(
         attribute_name="on_delay",
@@ -113,7 +119,9 @@ class HzcDelayCluster(CustomCluster):
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
         fallback_name="Channel 1 on delay",
-        reporting_config=ReportingConfig(min_interval=1, max_interval=300, reportable_change=1),
+        reporting_config=ReportingConfig(
+            min_interval=1, max_interval=300, reportable_change=1
+        ),
     )
     .prevent_default_entity_creation(
         endpoint_id=1,
@@ -138,7 +146,9 @@ class HzcDelayCluster(CustomCluster):
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
         fallback_name="Channel 2 auto off timer",
-        reporting_config=ReportingConfig(min_interval=1, max_interval=300, reportable_change=1),
+        reporting_config=ReportingConfig(
+            min_interval=1, max_interval=300, reportable_change=1
+        ),
     )
     .number(
         attribute_name="auto_on_timer",
@@ -150,7 +160,9 @@ class HzcDelayCluster(CustomCluster):
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
         fallback_name="Channel 2 auto on timer",
-        reporting_config=ReportingConfig(min_interval=1, max_interval=300, reportable_change=1),
+        reporting_config=ReportingConfig(
+            min_interval=1, max_interval=300, reportable_change=1
+        ),
     )
     .number(
         attribute_name="off_delay",
@@ -162,7 +174,9 @@ class HzcDelayCluster(CustomCluster):
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
         fallback_name="Channel 2 off delay",
-        reporting_config=ReportingConfig(min_interval=1, max_interval=300, reportable_change=1),
+        reporting_config=ReportingConfig(
+            min_interval=1, max_interval=300, reportable_change=1
+        ),
     )
     .number(
         attribute_name="on_delay",
@@ -174,7 +188,9 @@ class HzcDelayCluster(CustomCluster):
         unit=UnitOfTime.SECONDS,
         device_class=NumberDeviceClass.DURATION,
         fallback_name="Channel 2 on delay",
-        reporting_config=ReportingConfig(min_interval=1, max_interval=300, reportable_change=1),
+        reporting_config=ReportingConfig(
+            min_interval=1, max_interval=300, reportable_change=1
+        ),
     )
     .prevent_default_entity_creation(
         endpoint_id=2,
@@ -197,7 +213,9 @@ class HzcDelayCluster(CustomCluster):
         endpoint_id=1,
         translation_key="channel_1_external_switch_type",
         fallback_name="Channel 1 external switch type",
-        reporting_config=ReportingConfig(min_interval=1, max_interval=300, reportable_change=1),
+        reporting_config=ReportingConfig(
+            min_interval=1, max_interval=300, reportable_change=1
+        ),
     )
     .enum(
         attribute_name="external_switch_type",
@@ -206,7 +224,9 @@ class HzcDelayCluster(CustomCluster):
         endpoint_id=2,
         translation_key="channel_2_external_switch_type",
         fallback_name="Channel 2 external switch type",
-        reporting_config=ReportingConfig(min_interval=1, max_interval=300, reportable_change=1),
+        reporting_config=ReportingConfig(
+            min_interval=1, max_interval=300, reportable_change=1
+        ),
     )
     .add_to_registry()
 )

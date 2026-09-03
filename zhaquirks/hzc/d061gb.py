@@ -27,6 +27,7 @@ class ExternalSwitchType(t.enum8):
     door_bell = 0x00
     normal_switch = 0x01
 
+
 class DimmerWorkMode(t.enum8):
     """Dimmer work mode."""
 
@@ -159,7 +160,9 @@ class HzcLevelControl(CustomCluster, LevelControl):
     .prevent_default_entity_creation(
         endpoint_id=1,
         cluster_id=HzcLevelControl.cluster_id,
-        function=lambda entity: entity.__class__.__name__ == "OnLevelConfigurationEntity",
+        function=lambda entity: (
+            entity.__class__.__name__ == "OnLevelConfigurationEntity"
+        ),
     )
     .number(
         attribute_name=LevelControl.AttributeDefs.on_level.name,
@@ -237,8 +240,9 @@ class HzcLevelControl(CustomCluster, LevelControl):
     .prevent_default_entity_creation(
         endpoint_id=1,
         cluster_id=HzcLevelControl.cluster_id,
-        function=lambda entity: entity.__class__.__name__
-        == "DefaultMoveRateConfigurationEntity",
+        function=lambda entity: (
+            entity.__class__.__name__ == "DefaultMoveRateConfigurationEntity"
+        ),
     )
     .number(
         attribute_name=LevelControl.AttributeDefs.default_move_rate.name,
