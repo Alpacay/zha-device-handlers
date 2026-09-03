@@ -190,6 +190,49 @@ async def test_scene_mode_deserialize_failed_status(repenic_device):
     assert cluster._attr_cache.get("sleep_hour") is None
 
 
+@pytest.mark.parametrize(
+    "attrid",
+    [0x0001, 0x0002],  # wake_up_pattern, night_pattern
+)
+async def test_scene_mode_deserialize_pattern_failure_status(repenic_device, attrid):
+    """Test that a failure status for wake/night patterns does not update the cache."""
+    cluster = repenic_device.endpoints[1].repenic_scene_mode
+    # Read Attributes response: first record carries the target attrid with a
+    # FAILURE status (no value); a second failure record pads the frame past the
+    # quirk's 8-byte length gate.
+    frame = (
+        bytes([0x18, 0x01, 0x01])
+        + attrid.to_bytes(2, "little")
+        + bytes([0x01])
+        + bytes([0x00, 0x00, 0x01])
+    )
+
+    cluster.deserialize(frame)
+
+    assert cluster._attr_cache.get("wakeup_on_off") is None
+    assert cluster._attr_cache.get("night_on_off") is None
+
+
+@pytest.mark.parametrize(
+    "attrid",
+    [0x0001, 0x0002],  # wake_up_pattern, night_pattern
+)
+async def test_scene_mode_deserialize_pattern_non_string_type(repenic_device, attrid):
+    """Test that a non-string data type for wake/night patterns is ignored."""
+    cluster = repenic_device.endpoints[1].repenic_scene_mode
+    # Read Attributes response with SUCCESS status but a uint8 data type (0x20)
+    frame = (
+        bytes([0x18, 0x01, 0x01])
+        + attrid.to_bytes(2, "little")
+        + bytes([0x00, 0x20, 0x05])
+    )
+
+    cluster.deserialize(frame)
+
+    assert cluster._attr_cache.get("wakeup_on_off") is None
+    assert cluster._attr_cache.get("night_on_off") is None
+
+
 async def test_scene_mode_apply_custom_configuration(repenic_device):
     """Test that custom configuration reads all three pattern attributes."""
     cluster = repenic_device.endpoints[1].repenic_scene_mode
@@ -398,6 +441,20 @@ async def test_time_cluster_sync_time_when_ready_without_application(repenic_dev
     mock_sync.assert_awaited_once()
 
 
+async def test_time_cluster_sync_time_when_ready_waits_for_running(repenic_device):
+    """Test the readiness loop waits while the application is not yet running."""
+    time_cluster = repenic_device.endpoints[1].time
+
+    with (
+        mock.patch("asyncio.sleep", new=mock.AsyncMock()),
+        mock.patch.object(time_cluster, "_sync_time", mock.AsyncMock()) as mock_sync,
+    ):
+        repenic_device.application.state = "created"
+        await time_cluster._sync_time_when_ready()
+
+    mock_sync.assert_awaited_once()
+
+
 async def test_time_cluster_deserialize_schedules_sync(repenic_device):
     """Test that deserializing a frame schedules a time sync."""
     time_cluster = repenic_device.endpoints[1].time
@@ -437,6 +494,22 @@ async def test_onoff_reads_state_when_ready_without_application(repenic_device):
             on_off_cluster, "read_attributes", mock.AsyncMock()
         ) as mock_read,
     ):
+        await on_off_cluster._read_onoff_when_ready()
+
+    mock_read.assert_awaited_once_with([0])
+
+
+async def test_onoff_reads_state_waits_for_running(repenic_device):
+    """Test the OnOff readiness loop waits while the application is not running."""
+    on_off_cluster = repenic_device.endpoints[1].on_off
+
+    with (
+        mock.patch("asyncio.sleep", new=mock.AsyncMock()),
+        mock.patch.object(
+            on_off_cluster, "read_attributes", mock.AsyncMock()
+        ) as mock_read,
+    ):
+        repenic_device.application.state = "created"
         await on_off_cluster._read_onoff_when_ready()
 
     mock_read.assert_awaited_once_with([0])
