@@ -2,15 +2,14 @@
 
 import logging
 from typing import Final
-from zigpy import types as t
-from zigpy.zcl.clusters.general import LevelControl, OnOff
 
+from zigpy import types as t
 from zigpy.quirks import CustomCluster
 from zigpy.quirks.v2 import QuirkBuilder
 from zigpy.quirks.v2.homeassistant import PERCENTAGE
 from zigpy.typing import UNDEFINED, UndefinedType
+from zigpy.zcl.clusters.general import LevelControl, OnOff
 from zigpy.zcl.foundation import ZCLAttributeDef
-from zhaquirks import NoReplyMixin
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -91,6 +90,7 @@ class HzcLevelControl(CustomCluster, LevelControl):
         manufacturer: int | UndefinedType | None = UNDEFINED,
         **kwargs,
     ) -> object:
+        """Write attributes, translating 0-100% UI values to raw wire values."""
         # Translate the 0-100% UI value to the raw value the device expects.
         # on_level keeps a 0xFF "off" sentinel; start_level is a plain 0-254.
         if "on_level" in attributes and attributes["on_level"] is not None:
@@ -143,7 +143,6 @@ class HzcLevelControl(CustomCluster, LevelControl):
 (
     QuirkBuilder("HZC", "D061-GB")
     .replaces(HzcLevelControl)
-    .replaces(HzcLevelControl)
     .prevent_default_entity_creation(
         endpoint_id=1,
         cluster_id=OnOff.cluster_id,
@@ -155,7 +154,7 @@ class HzcLevelControl(CustomCluster, LevelControl):
         cluster_id=OnOff.cluster_id,
         endpoint_id=1,
         translation_key="start_up_on_off",
-        fallback_name="POnOff.ower on state",
+        fallback_name="Power on state",
     )
     .prevent_default_entity_creation(
         endpoint_id=1,
